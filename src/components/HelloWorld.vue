@@ -546,4 +546,28 @@ li {
 a {
   color: #42b983;
 }
+
+body {
+  background-color: #FFEBEE;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+select {
+  border-radius: 2px;
+}
+
+#select-boxes {
+  display: flex;
+}
+
+.chartBlock {
+  width: 800px;
+  display: flex;
+}
+
+select {
+  font-size: 18px;
+}
+
+
 </style>

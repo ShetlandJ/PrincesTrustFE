@@ -49,7 +49,7 @@ import util from '../../helpers/util';
 
 export default {
 
-  name: 'HelloWorld',
+  name: 'Charts',
   data () {
     return {
       url: 'https://api.mlab.com/api/1/databases/signins/collections/signins?apiKey=Vp2I1nmC961_lV2whDojmmOuZzXb0S_o&l=10000',
@@ -79,7 +79,9 @@ export default {
       myBarChart: '',
       hourChart: '',
       visitsToday: "Loading...",
-      visitsThisMonth: ''
+      visitsThisMonth: '',
+      hoursArray: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      today: new Date()
     }
   },
   created() {
@@ -105,15 +107,15 @@ export default {
     },
 
     dailyStats() {
-      var today = new Date()
+      // var today = new Date()
       var dayVisitCounter = 0
       var monthVisitCounter = 0
       for (var visit of this.data) {
         var visitDate = new Date(visit.date)
-        if (visitDate.getDate() === today.getDate() && visitDate.getMonth()+1 === today.getMonth()+1 ) {
+        if (visitDate.getDate() === this.today.getDate() && visitDate.getMonth()+1 === this.today.getMonth()+1 ) {
           dayVisitCounter += 1
         }
-        if (visitDate.getMonth()+1 === today.getMonth()+1 && visitDate.getFullYear() === today.getFullYear()) {
+        if (visitDate.getMonth()+1 === this.today.getMonth()+1 && visitDate.getFullYear() === this.today.getFullYear()) {
           monthVisitCounter += 1
         }
       }
@@ -141,15 +143,12 @@ export default {
 
     renderYearlyBarChart() {
 
-      var today = new Date();
-
       var yy = this.selectedYear
 
       if (yy === undefined || yy === "") {
-        yy = today.getFullYear()
+        yy = this.today.getFullYear()
       } else {
         yy = this.selectedYear
-
       }
 
       var yearArray = []
@@ -161,8 +160,6 @@ export default {
       }
 
       var visitPerMonth = []
-      // for (var i = 0; i < dayMonth.length; i++) {
-      //   var visitDayCount = 0
       for (var number of yearNumbers) {
         var visitCount = 0
         for (var visit of this.data) {
@@ -196,11 +193,10 @@ export default {
 
     renderMonthlyBarChart() {
 
-      var today = new Date();
       var mm = this.selectedMonth;
 
       if (mm === undefined || mm === "") {
-        mm = today.getMonth()+1
+        mm = this.today.getMonth()+1
       } else {
         mm = this.selectedMonth
       }
@@ -217,7 +213,7 @@ export default {
 
       this.selectedMonthDays = dayMonth
 
-      var yy = today.getYear()
+      var yy = this.today.getYear()
       for (var i = 0; i < dayMonth.length; i++) {
         var visitDayCount = 0
         for (var visit of this.data) {
@@ -252,19 +248,16 @@ export default {
 
     renderHourlyBarChart() {
       var visits = [];
-      var hoursArray = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-
-      var today = new Date();
 
       var dd = this.selectedDay
       var mm = this.selectedMonth
-      var yy = today.getYear()
-      for (var i = 0; i < hoursArray.length; i++) {
+      var yy = this.today.getYear()
+      for (var i = 0; i < this.hoursArray.length; i++) {
         var hourVisitCount = 0
         for (var visit of this.data) {
           var visitDate = new Date(visit.date)
 
-          if (visitDate.getHours() === hoursArray[i] && visitDate.getDate() === dd && visitDate.getMonth()+1 === mm) {
+          if (visitDate.getHours() === this.hoursArray[i] && visitDate.getDate() === dd && visitDate.getMonth()+1 === mm) {
             hourVisitCount += 1;
           }
         }
@@ -276,7 +269,7 @@ export default {
 
       this.hourChart = util.renderChart(
         ctx,
-        hoursArray,
+        this.hoursArray,
         'Visits per hour for ' + this.selectedDay + "/" + util.getMonthName(this.selectedMonth),
         visits,
         'Visits',
@@ -285,11 +278,9 @@ export default {
     },
     renderHourlyPercentageBarChart() {
 
-      var today = new Date();
-      var hoursArray = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
       var visitsPerHour = []
 
-      for (var number of hoursArray) {
+      for (var number of this.hoursArray) {
         var visitCount = 0
         for (var visit of this.data) {
           var visitDate = new Date(visit.date)
@@ -313,7 +304,7 @@ export default {
 
       util.renderChart(
         ctx,
-        hoursArray,
+        this.hoursArray,
         'Visit hour by percentage',
         visitsPerHourPercent,
         'Percentage (%)',

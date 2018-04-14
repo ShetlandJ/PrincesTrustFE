@@ -37,10 +37,12 @@ var getMonthName = function(monthNumber) {
     return "December";
     break;
     default:
-    return "That's not a valid month number"
+    return "That is not a valid month number. Input must be between 0 and 13"
     break;
   }
 };
+
+getMonthName(1)
 
 var getMonthNumber = function(monthName){
   switch(monthName) {

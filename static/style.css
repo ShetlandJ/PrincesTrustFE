@@ -7,9 +7,9 @@ select {
   border-radius: 2px;
 }
 
-#select-boxes {
+/* #select-boxes {
   display: flex;
-}
+} */
 
 .chartBlock {
   width: 800px;
@@ -18,4 +18,6 @@ select {
 
 select {
   font-size: 18px;
+  border:0px;
+  outline:0px;
 }

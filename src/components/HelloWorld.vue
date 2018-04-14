@@ -7,7 +7,7 @@
     <div id="select-boxes">
 
       <select v-model="selectedMonth" @change="monthFilter">
-        <option disabled selected value="">Please select one</option>
+        <option disabled selected value="">Choose month</option>
         <option v-for="month in months" v-bind:value="month.month">
           {{ month.name }}
         </option>
@@ -44,13 +44,11 @@
 </template>
 
 <script>
+import util from '../../helpers/util';
 /* eslint-disable */
-// import {makeRequest, requestComplete} from "../../helpers/helpers"
-
-// example URL with params:
 
 export default {
-  /* eslint-disable */
+
   name: 'HelloWorld',
   data () {
     return {
@@ -80,7 +78,7 @@ export default {
       selectedHour: '',
       myBarChart: '',
       hourChart: '',
-      visitsToday: '',
+      visitsToday: "Loading...",
       visitsThisMonth: ''
     }
   },
@@ -116,7 +114,7 @@ export default {
           dayVisitCounter += 1
         }
         if (visitDate.getMonth()+1 === today.getMonth()+1 && visitDate.getFullYear() === today.getFullYear()) {
-        monthVisitCounter += 1
+          monthVisitCounter += 1
         }
       }
       this.visitsToday = dayVisitCounter
@@ -176,55 +174,79 @@ export default {
         visitPerMonth.push(visitCount)
       }
 
+      // labels: yearArray
+      // datasetLabel: 'Visits per day per for ' + this.selectedYear
+      // datasetData : visitPerMonth
+      // yLabel: 'Visits'
+      // xLabel: 'Months'
+      // onClick: { valid: true }
+
       var ctx = document.getElementById("year-visits-chart").getContext('2d');
-      var yearBarChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: yearArray,
-          backgroundColor: '#FFFFFF',
-          backgroundColor: '#FFFFFF',
-          datasets: [{
-            label: 'Visits per day per for ' + this.selectedYear,
-            data: visitPerMonth,
-            backgroundColor: '#CC0033',
-            borderColor: [
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          'onClick' : (evt, item) => {
-            var month = item[0]['_model'].label
-            var monthNumber = this.getMonthReverse(month);
-            this.selectedMonth = monthNumber
-            if (this.myBarChart) {
-              this.myBarChart.destroy()
-            }
-            this.renderMonthlyBarChart();
-          },
-          title: {
-            display: true,
-            text: 'Visits per day per for ' + this.selectedYear
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero:true
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Visits'
-              }
-            }],
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Month'
-              }
-            }]
+      util.renderChart(
+        ctx,
+        yearArray,
+        'Visits per day per for ' + this.selectedYear,
+        visitPerMonth,
+        'Visits',
+        'Months',
+        (env, item) => {
+          var month = item[0]['_model'].label
+          var monthNumber = util.getMonthNumber(month);
+          this.selectedMonth = monthNumber
+          if (this.myBarChart) {
+            this.myBarChart.destroy()
           }
+          this.renderMonthlyBarChart();
         }
-      });
+
+      )
+      // var yearBarChart = new Chart(ctx, {
+      //   type: 'bar',
+      //   data: {
+      //     labels: yearArray,
+      //     backgroundColor: '#FFFFFF',
+      //     datasets: [{
+      //       label: 'Visits per day per for ' + this.selectedYear,
+      //       data: visitPerMonth,
+      //       backgroundColor: '#CC0033',
+      //       borderColor: [
+      //       ],
+      //       borderWidth: 1
+      //     }]
+      //   },
+      //   options: {
+      //     'onClick' : (evt, item) => {
+      //       var month = item[0]['_model'].label
+      //       var monthNumber = util.getMonthNumber(month);
+      //       this.selectedMonth = monthNumber
+      //       if (this.myBarChart) {
+      //         this.myBarChart.destroy()
+      //       }
+      //       this.renderMonthlyBarChart();
+      //     },
+      //     title: {
+      //       display: true,
+      //       text: 'Visits per day per for ' + this.selectedYear
+      //     },
+      //     scales: {
+      //       yAxes: [{
+      //         ticks: {
+      //           beginAtZero:true
+      //         },
+      //         scaleLabel: {
+      //           display: true,
+      //           labelString: 'Visits'
+      //         }
+      //       }],
+      //       xAxes: [{
+      //         scaleLabel: {
+      //           display: true,
+      //           labelString: 'Month'
+      //         }
+      //       }]
+      //     }
+      //   }
+      // });
     },
 
     renderHourlyPercentageBarChart() {
@@ -258,7 +280,6 @@ export default {
         type: 'bar',
         data: {
           labels: hoursArray,
-          backgroundColor: '#FFFFFF',
           backgroundColor: '#FFFFFF',
           datasets: [{
             label: 'Visit hour by percentage',
@@ -305,7 +326,7 @@ export default {
       } else {
         mm = this.selectedMonth
       }
-      this.monthName = this.getMonth(mm)
+      this.monthName = util.getMonthName(mm)
 
       var dayMonth = []
       var visits = []
@@ -412,7 +433,7 @@ export default {
           backgroundColor: '#FFFFFF',
           backgroundColor: '#FFFFFF',
           datasets: [{
-            label: 'Visits per hour for ' + this.selectedDay + "/" + this.getMonth(this.selectedMonth),
+            label: 'Visits per hour for ' + this.selectedDay + "/" + util.getMonthName(this.selectedMonth),
             data: visits,
             backgroundColor:
             '#CC0033',
@@ -424,7 +445,7 @@ export default {
         options: {
           title: {
             display: true,
-            text: 'Visits per hour for ' + this.selectedDay + "/" + this.getMonth(this.selectedMonth)
+            text: 'Visits per hour for ' + this.selectedDay + "/" + util.getMonthName(this.selectedMonth)
           },
           scales: {
             yAxes: [{
@@ -445,86 +466,6 @@ export default {
           }
         }
       });
-    },
-    getMonth(monthNumber){
-      switch(monthNumber) {
-        case 1:
-        return "January";
-        break;
-        case 2:
-        return "February"
-        break;
-        case 3:
-        return "March";
-        break;
-        case 4:
-        return "April";
-        break;
-        case 5:
-        return "May";
-        break;
-        case 6:
-        return "June";
-        break;
-        case 7:
-        return "July";
-        break;
-        case 8:
-        return "August"
-        break;
-        case 9:
-        return "September";
-        break;
-        case 10:
-        return "October";
-        break;
-        case 11:
-        return "November";
-        break;
-        case 12:
-        return "December";
-        break;
-      }
-    },
-    getMonthReverse(monthName){
-      switch(monthName) {
-        case "January":
-        return 1;
-        break;
-        case "February":
-        return 2
-        break;
-        case "March":
-        return 3;
-        break;
-        case "April":
-        return 4;
-        break;
-        case "May":
-        return 5;
-        break;
-        case "June":
-        return 6;
-        break;
-        case "July":
-        return 7;
-        break;
-        case "August":
-        return 8
-        break;
-        case "September":
-        return 9;
-        break;
-        case "October":
-        return 10;
-        break;
-        case "November":
-        return 11;
-        break;
-        case "December":
-        return 12;
-        break;
-      }
     },
   },
 }
@@ -547,11 +488,6 @@ a {
   color: #42b983;
 }
 
-body {
-  background-color: #FFEBEE;
-  font-family: 'Helvetica', 'Arial', sans-serif;
-}
-
 select {
   border-radius: 2px;
 }
@@ -567,6 +503,8 @@ select {
 
 select {
   font-size: 18px;
+  border:0px;
+  outline:0px;
 }
 
 

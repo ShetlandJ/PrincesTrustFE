@@ -86,10 +86,11 @@ var getMonthNumber = function(monthName){
   }
 }
 
+var myBarChart;
 
 var renderChart = function(chart, labels, datasetLabel, datasetData, yLabel, xLabel, callback) {
 
-  var chart = new Chart(chart, {
+  myBarChart = new Chart(chart, {
     type: 'bar',
     data: {
       labels: labels,
@@ -104,10 +105,6 @@ var renderChart = function(chart, labels, datasetLabel, datasetData, yLabel, xLa
       }]
     },
     options: {
-      // 'onClick' : (evt, item) => {
-      //   if (clickFunction.valid) {
-      //     clickFunction
-      //   }
       'onClick' : callback,
       title: {
         display: true,
@@ -132,6 +129,9 @@ var renderChart = function(chart, labels, datasetLabel, datasetData, yLabel, xLa
       }
     }
   });
+
+  return myBarChart
+
 }
 
 

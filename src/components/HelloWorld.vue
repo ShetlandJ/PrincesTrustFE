@@ -174,13 +174,6 @@ export default {
         visitPerMonth.push(visitCount)
       }
 
-      // labels: yearArray
-      // datasetLabel: 'Visits per day per for ' + this.selectedYear
-      // datasetData : visitPerMonth
-      // yLabel: 'Visits'
-      // xLabel: 'Months'
-      // onClick: { valid: true }
-
       var ctx = document.getElementById("year-visits-chart").getContext('2d');
       util.renderChart(
         ctx,
@@ -198,122 +191,7 @@ export default {
           }
           this.renderMonthlyBarChart();
         }
-
       )
-      // var yearBarChart = new Chart(ctx, {
-      //   type: 'bar',
-      //   data: {
-      //     labels: yearArray,
-      //     backgroundColor: '#FFFFFF',
-      //     datasets: [{
-      //       label: 'Visits per day per for ' + this.selectedYear,
-      //       data: visitPerMonth,
-      //       backgroundColor: '#CC0033',
-      //       borderColor: [
-      //       ],
-      //       borderWidth: 1
-      //     }]
-      //   },
-      //   options: {
-      //     'onClick' : (evt, item) => {
-      //       var month = item[0]['_model'].label
-      //       var monthNumber = util.getMonthNumber(month);
-      //       this.selectedMonth = monthNumber
-      //       if (this.myBarChart) {
-      //         this.myBarChart.destroy()
-      //       }
-      //       this.renderMonthlyBarChart();
-      //     },
-      //     title: {
-      //       display: true,
-      //       text: 'Visits per day per for ' + this.selectedYear
-      //     },
-      //     scales: {
-      //       yAxes: [{
-      //         ticks: {
-      //           beginAtZero:true
-      //         },
-      //         scaleLabel: {
-      //           display: true,
-      //           labelString: 'Visits'
-      //         }
-      //       }],
-      //       xAxes: [{
-      //         scaleLabel: {
-      //           display: true,
-      //           labelString: 'Month'
-      //         }
-      //       }]
-      //     }
-      //   }
-      // });
-    },
-
-    renderHourlyPercentageBarChart() {
-
-      var today = new Date();
-      var hoursArray = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-      var visitsPerHour = []
-
-      for (var number of hoursArray) {
-        var visitCount = 0
-        for (var visit of this.data) {
-          var visitDate = new Date(visit.date)
-          if (visitDate.getHours() === number) {
-            visitCount += 1
-          }
-        }
-        visitsPerHour.push(visitCount)
-      }
-
-      var totalVisits = visitsPerHour.reduce((x, y) => x + y);
-      var visitsPerHourPercent = []
-
-      for (var number of visitsPerHour) {
-        var percentage = (number / totalVisits) * 100
-        var rounded = Math.round(percentage)
-        visitsPerHourPercent.push(rounded)
-      }
-
-      var ctx = document.getElementById("total-hourly-visits-chart").getContext('2d');
-      var myBarChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: hoursArray,
-          backgroundColor: '#FFFFFF',
-          datasets: [{
-            label: 'Visit hour by percentage',
-            data: visitsPerHourPercent,
-            backgroundColor: '#CC0033',
-            borderColor: [
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          title: {
-            display: true,
-            text: 'Visit hour by percentage'
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero:true
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Percentage (%)'
-              }
-            }],
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Hours'
-              }
-            }]
-          }
-        }
-      });
     },
 
     renderMonthlyBarChart() {
@@ -354,54 +232,22 @@ export default {
 
       var ctx = document.getElementById("month-visits-chart").getContext('2d');
 
-      this.myBarChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: dayMonth,
-          backgroundColor: '#FFFFFF',
-          backgroundColor: '#FFFFFF',
-          datasets: [{
-            label: 'Visits per day per for ' + this.monthName,
-            data: visits,
-            backgroundColor: '#CC0033',
-            borderColor: [
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          'onClick' : (evt, item) => {
-            var day = item[0]['_model'].label
-            this.selectedDay = day
-            if (this.hourChart) {
-              this.hourChart.destroy()
-            }
-
-            this.renderHourlyBarChart();
-          },
-          title: {
-            display: true,
-            text: 'Visits per day per for ' + this.monthName
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero:true
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Visits'
-              }
-            }],
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Day'
-              }
-            }]
+      this.myBarChart = util.renderChart(
+        ctx,
+        dayMonth,
+        'Visits per day per for ' + this.monthName,
+        visits,
+        'Visits',
+        'Day',
+        (env, item) => {
+          var day = item[0]['_model'].label
+          this.selectedDay = day
+          if (this.hourChart) {
+            this.hourChart.destroy()
           }
+          this.renderHourlyBarChart();
         }
-      });
+      )
     },
 
     renderHourlyBarChart() {
@@ -426,47 +272,54 @@ export default {
       }
 
       var ctx = document.getElementById("hourly-visits-chart").getContext('2d');
-      this.hourChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: hoursArray,
-          backgroundColor: '#FFFFFF',
-          backgroundColor: '#FFFFFF',
-          datasets: [{
-            label: 'Visits per hour for ' + this.selectedDay + "/" + util.getMonthName(this.selectedMonth),
-            data: visits,
-            backgroundColor:
-            '#CC0033',
-            borderColor: [
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          title: {
-            display: true,
-            text: 'Visits per hour for ' + this.selectedDay + "/" + util.getMonthName(this.selectedMonth)
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero:true
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Visits'
-              }
-            }],
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Hour'
-              }
-            }]
+
+
+      this.hourChart = util.renderChart(
+        ctx,
+        hoursArray,
+        'Visits per hour for ' + this.selectedDay + "/" + util.getMonthName(this.selectedMonth),
+        visits,
+        'Visits',
+        'Hour',
+      )
+    },
+    renderHourlyPercentageBarChart() {
+
+      var today = new Date();
+      var hoursArray = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+      var visitsPerHour = []
+
+      for (var number of hoursArray) {
+        var visitCount = 0
+        for (var visit of this.data) {
+          var visitDate = new Date(visit.date)
+          if (visitDate.getHours() === number) {
+            visitCount += 1
           }
         }
-      });
-    },
+        visitsPerHour.push(visitCount)
+      }
+
+      var totalVisits = visitsPerHour.reduce((x, y) => x + y);
+      var visitsPerHourPercent = []
+
+      for (var number of visitsPerHour) {
+        var percentage = (number / totalVisits) * 100
+        var rounded = Math.round(percentage)
+        visitsPerHourPercent.push(rounded)
+      }
+
+      var ctx = document.getElementById("total-hourly-visits-chart").getContext('2d');
+
+      util.renderChart(
+        ctx,
+        hoursArray,
+        'Visit hour by percentage',
+        visitsPerHourPercent,
+        'Percentage (%)',
+        'Hours',
+      )
+    }
   },
 }
 </script>

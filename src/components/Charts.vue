@@ -92,7 +92,7 @@ export default {
       this.dataLoaded = true;
       console.log("Data has loaded")
       this.selectedYear = this.today.getFullYear()
-      this.selectedMonth = this.today.getMonth()
+      this.selectedMonth = this.today.getMonth()+1
       this.selectedDay = this.today.getDate()
       this.renderYearlyBarChart()
       this.renderMonthlyBarChart()

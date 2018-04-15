@@ -69,12 +69,12 @@ export default {
         {name: 'November', shortName: 'nov', month: 11},
         {name: 'December', shortName: 'dec', month: 12}
       ],
+      selectedYear: '',
       selectedMonth: '',
       selectedDay: '',
       selectedMonthDays: '',
       month: [],
       monthName: '',
-      selectedYear: '',
       selectedHour: '',
       myBarChart: '',
       hourChart: '',
@@ -90,6 +90,9 @@ export default {
       this.data = response.body;
       this.dataLoaded = true;
       console.log("Data has loaded")
+      this.selectedYear = this.today.getFullYear()
+      this.selectedMonth = this.today.getMonth()
+      this.selectedDay = this.today.getDate()
       this.renderYearlyBarChart()
       this.renderMonthlyBarChart()
       this.renderHourlyBarChart()
@@ -338,7 +341,7 @@ select {
 }
 
 #select-boxes {
-  display: flex;
+  /* display: flex; */
 }
 
 .chartBlock {

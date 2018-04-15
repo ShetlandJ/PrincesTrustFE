@@ -1,6 +1,6 @@
 <template>
   <div id="header">
-    <p>HEADER</p>
+    <h2>Princes Trust sign-in dashboard</h2>
   </div>
 </template>
 
@@ -12,5 +12,11 @@ export default {
 </script>
 
 <style>
+
+#header {
+  width: 100%;
+  background-color: #CA0A37;
+  color: white;
+}
 
 </style>

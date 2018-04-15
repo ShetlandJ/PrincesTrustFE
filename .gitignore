@@ -12,4 +12,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 
-/src/components/dbLink
+dbLink.js

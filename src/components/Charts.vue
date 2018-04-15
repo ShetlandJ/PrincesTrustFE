@@ -45,6 +45,7 @@
 
 <script>
 import util from '../../helpers/util';
+import db from './dbLink'
 /* eslint-disable */
 
 export default {
@@ -52,7 +53,7 @@ export default {
   name: 'Charts',
   data () {
     return {
-      url: 'https://api.mlab.com/api/1/databases/signins/collections/signins?apiKey=Vp2I1nmC961_lV2whDojmmOuZzXb0S_o&l=10000',
+      url: db.link,
       data: "",
       dataLoaded: false,
       months: [
@@ -85,7 +86,7 @@ export default {
     }
   },
   created() {
-    this.$http.get('https://api.mlab.com/api/1/databases/signins/collections/signins?apiKey=Vp2I1nmC961_lV2whDojmmOuZzXb0S_o&l=10000')
+    this.$http.get(this.url)
     .then(response => {
       this.data = response.body;
       this.dataLoaded = true;

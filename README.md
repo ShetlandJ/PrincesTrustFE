@@ -1,21 +1,25 @@
-# ptfe
+# Princes Trust Front End
 
-> A front end for Vue 
+PTFE is a VueJS project undertaken for the Princes Trust's office in Glasgow. The charity has a number of visitors to the building each (week)day, and wanted to be able to log the numbers coming through to be able to have the information to provide to funders.
+
+They had an existing app, but it broke and no-one had the skills to fix it, so I was asked to help recreate it.
+
+Initially, it was a quick and dirty fix involving a number of HTML pages. I have since refactored the whole project, separating out the node.js sign-in site and the admin dashboard site.
+
+The bar chart bars are clickable, and different graphs will render below each graph depending on what you select.
+
+The project has Jest as it's testing suite.
 
 ## Build Setup
 
 ``` bash
 # install dependencies
-npm install
+npm i
 
 # serve with hot reload at localhost:8080
 npm run dev
 
-# build for production with minification
-npm run build
+# run tests
+npm test
 
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

@@ -274,7 +274,7 @@ export default {
       this.hourChart = util.renderChart(
         ctx,
         this.hoursArray,
-        'Visits per hour for ' + this.selectedDay + "/" + util.getMonthName(this.selectedMonth),
+        'Visits per hour for ' + this.selectedDay + " / " + util.getMonthName(this.selectedMonth),
         visits,
         'Visits',
         'Hour',
@@ -323,7 +323,9 @@ export default {
 <style scoped>
 h1, h2 {
   font-weight: normal;
+  margin: 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;

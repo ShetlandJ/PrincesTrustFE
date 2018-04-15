@@ -19,4 +19,8 @@ export default {
   color: white;
 }
 
+h2 {
+  padding: 10px 0px 10px 0px;
+}
+
 </style>

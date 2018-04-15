@@ -120,7 +120,8 @@ var renderChart = function(chart, labels, datasetLabel, datasetData, yLabel, xLa
       'onClick' : callback,
       title: {
         display: true,
-        text: datasetLabel
+        text: datasetLabel,
+        fontSize: 20
       },
       scales: {
         yAxes: [{

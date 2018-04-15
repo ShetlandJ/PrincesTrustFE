@@ -45,6 +45,7 @@ var getMonthName = function(monthNumber) {
 getMonthName(1)
 
 var getMonthNumber = function(monthName){
+  var validMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   switch(monthName) {
     case "January":
     return 1;
@@ -83,12 +84,21 @@ var getMonthNumber = function(monthName){
     return 12;
     break;
     default:
-    return "That's not a correct month name"
+    return "That's not a correct month name. The following are valid month names: " + validMonthNames
     break;
   }
 }
 
-var myBarChart;
+var getDaysInMonth = function(year, month) {
+  var date = new Date(year, month);
+  var days = [];
+  while (date.getMonth() === month) {
+    days.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+  return days;
+}
+
 
 var renderChart = function(chart, labels, datasetLabel, datasetData, yLabel, xLabel, callback) {
 
@@ -133,12 +143,12 @@ var renderChart = function(chart, labels, datasetLabel, datasetData, yLabel, xLa
   });
 
   return myBarChart
-
 }
 
 
 module.exports = {
-  getMonthName:getMonthName,
-  getMonthNumber:getMonthNumber,
-  renderChart: renderChart
+  getMonthName: getMonthName,
+  getMonthNumber: getMonthNumber,
+  renderChart: renderChart,
+  getDaysInMonth: getDaysInMonth
 };

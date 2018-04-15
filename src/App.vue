@@ -1,15 +1,18 @@
 <template>
   <div id="app">
+    <Header/>
     <Charts/>
   </div>
 </template>
 
 <script>
 import Charts from './components/Charts'
+import Header from './components/Header'
 
 export default {
   name: 'App',
   components: {
+    Header,
     Charts
   }
 }

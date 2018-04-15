@@ -91,6 +91,8 @@ export default {
       this.dataLoaded = true;
       console.log("Data has loaded")
       this.renderYearlyBarChart()
+      this.renderMonthlyBarChart()
+      this.renderHourlyBarChart()
       this.renderHourlyPercentageBarChart()
       this.dailyStats()
     })
@@ -128,17 +130,6 @@ export default {
       if (timeStamp.getMonth()+1 === month) {
         this.month.push(signin);
       }
-    },
-
-    getDaysInMonth(month, year) {
-
-      var date = new Date(year, month, 1);
-      var days = [];
-      while (date.getMonth() === month) {
-        days.push(new Date(date));
-        date.setDate(date.getDate() + 1);
-      }
-      return days;
     },
 
     renderYearlyBarChart() {
@@ -205,7 +196,7 @@ export default {
       var dayMonth = []
       var visits = []
 
-      var days_array = this.getDaysInMonth(mm-1, 2018)
+      var days_array = util.getDaysInMonth(2018, mm-1)
 
       for (var day of days_array) {
         dayMonth.push(day.getDate())
@@ -249,8 +240,19 @@ export default {
     renderHourlyBarChart() {
       var visits = [];
 
+
       var dd = this.selectedDay
-      var mm = this.selectedMonth
+      if (!dd) {
+        dd = this.today.getDate()
+      }
+
+      if (this.selectedMonth) {
+        var mm = this.selectedMonth
+      } else {
+        mm = this.today.getMonth()
+      }
+        // mm = this.today.getDate()
+
       var yy = this.today.getYear()
       for (var i = 0; i < this.hoursArray.length; i++) {
         var hourVisitCount = 0
@@ -265,7 +267,6 @@ export default {
       }
 
       var ctx = document.getElementById("hourly-visits-chart").getContext('2d');
-
 
       this.hourChart = util.renderChart(
         ctx,

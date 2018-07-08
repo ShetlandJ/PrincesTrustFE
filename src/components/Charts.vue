@@ -1,6 +1,17 @@
 <template>
   <div class="hello">
 
+    <div class="radio-group">
+      <label for="all">All</label>
+      <input v-model="filter" type="radio" checked="checked" name="filter" value="all">
+      <label for="all">Young People</label>
+      <input v-model="filter" type="radio" name="filter" value="young">
+      <label for="all">Other</label>
+      <input v-model="filter" type="radio" name="filter" value="other">
+    </div>
+    <button type="button" name="button" @click="typeFilter">Generate charts</button>
+
+
     <h2>Visits today: {{ visitsToday }}</h2>
     <h2>Visits this month: {{ visitsThisMonth }}</h2>
 
@@ -79,29 +90,58 @@ export default {
       selectedHour: '',
       myBarChart: '',
       hourChart: '',
-      visitsToday: "Loading...",
+      visitsToday: "Select a filter above",
       visitsThisMonth: '',
       hoursArray: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-      today: new Date()
+      today: new Date(),
+      filter: '',
     }
   },
-  created() {
-    this.$http.get(this.url)
-    .then(response => {
-      this.data = response.body;
-      this.dataLoaded = true;
-      console.log("Data has loaded")
-      this.selectedYear = this.today.getFullYear()
-      this.selectedMonth = this.today.getMonth()+1
-      this.selectedDay = this.today.getDate()
-      this.renderYearlyBarChart()
-      this.renderMonthlyBarChart()
-      this.renderHourlyBarChart()
-      this.renderHourlyPercentageBarChart()
-      this.dailyStats()
-    })
-  },
+  // created() {
+  //   this.$http.get(this.url + this.filter)
+  //   .then(response => {
+  //     this.data = response.body;
+  //     this.dataLoaded = true;
+  //     console.log("Data has loaded")
+  //     this.selectedYear = this.today.getFullYear()
+  //     this.selectedMonth = this.today.getMonth()+1
+  //     this.selectedDay = this.today.getDate()
+  //     this.renderYearlyBarChart()
+  //     this.renderMonthlyBarChart()
+  //     this.renderHourlyBarChart()
+  //     this.renderHourlyPercentageBarChart()
+  //     this.dailyStats()
+  //   })
+  // },
   methods: {
+    typeFilter () {
+      if (this.filter === "other") {
+        this.generateCharts('&q=%7B"personStatus":"other"%7D');
+      } else if (this.filter === "young") {
+        this.generateCharts('&q=%7B"personStatus":"young"%7D');
+      } else {
+        this.generateCharts("");
+      }
+    },
+    generateCharts(filter) {
+      console.log('########################')
+      console.log(this.url + filter);
+      console.log('########################')
+      this.$http.get(this.url + filter)
+      .then(response => {
+        this.data = response.body;
+        this.dataLoaded = true;
+        console.log("Data has loaded")
+        this.selectedYear = this.today.getFullYear()
+        this.selectedMonth = this.today.getMonth()+1
+        this.selectedDay = this.today.getDate()
+        this.renderYearlyBarChart()
+        this.renderMonthlyBarChart()
+        this.renderHourlyBarChart()
+        this.renderHourlyPercentageBarChart()
+        this.dailyStats()
+      })
+    },
     monthFilter() {
       this.month = []
       var month = this.selectedMonth
@@ -255,7 +295,7 @@ export default {
       } else {
         mm = this.today.getMonth()
       }
-        // mm = this.today.getDate()
+      // mm = this.today.getDate()
 
       var yy = this.today.getYear()
       for (var i = 0; i < this.hoursArray.length; i++) {

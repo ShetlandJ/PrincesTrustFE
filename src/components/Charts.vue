@@ -14,6 +14,7 @@
 
     <h2>Visits today: {{ visitsToday }}</h2>
     <h2>Visits this month: {{ visitsThisMonth }}</h2>
+    <h2>Filter: </h2>
 
     <div id="select-boxes">
 
@@ -95,27 +96,13 @@ export default {
       hoursArray: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
       today: new Date(),
       filter: '',
+      filterType: ''
     }
   },
-  // created() {
-  //   this.$http.get(this.url + this.filter)
-  //   .then(response => {
-  //     this.data = response.body;
-  //     this.dataLoaded = true;
-  //     console.log("Data has loaded")
-  //     this.selectedYear = this.today.getFullYear()
-  //     this.selectedMonth = this.today.getMonth()+1
-  //     this.selectedDay = this.today.getDate()
-  //     this.renderYearlyBarChart()
-  //     this.renderMonthlyBarChart()
-  //     this.renderHourlyBarChart()
-  //     this.renderHourlyPercentageBarChart()
-  //     this.dailyStats()
-  //   })
-  // },
   methods: {
     typeFilter () {
       if (this.filter === "other") {
+        this.filterType = "Other (non-)"
         this.generateCharts('&q=%7B"personStatus":"other"%7D');
       } else if (this.filter === "young") {
         this.generateCharts('&q=%7B"personStatus":"young"%7D');
@@ -124,9 +111,6 @@ export default {
       }
     },
     generateCharts(filter) {
-      console.log('########################')
-      console.log(this.url + filter);
-      console.log('########################')
       this.$http.get(this.url + filter)
       .then(response => {
         this.data = response.body;

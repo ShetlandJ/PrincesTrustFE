@@ -1,15 +1,21 @@
 <template>
   <div class="hello">
 
-    <div class="radio-group">
-      <label for="all">All</label>
-      <input v-model="filter" type="radio" checked="checked" name="filter" value="all">
-      <label for="all">Young People</label>
-      <input v-model="filter" type="radio" name="filter" value="young">
-      <label for="all">Other</label>
-      <input v-model="filter" type="radio" name="filter" value="other">
+    <div class="row">
+      <div class="column">
+        <label for="all">All</label>
+        <input v-model="filter" type="radio" checked="checked" name="filter" value="all">
+      </div>
+      <div class="column">
+        <label for="all">Young People</label>
+        <input v-model="filter" type="radio" name="filter" value="young">
+      </div>
+      <div class="column">
+        <label for="all">Other</label>
+        <input v-model="filter" type="radio" name="filter" value="other">
+      </div>
     </div>
-    <button type="button" name="button" @click="typeFilter">Generate charts</button>
+    <button type="button" class="alert" name="button" @click="typeFilter">Generate charts</button>
 
 
     <h2>Visits today: {{ visitsToday }}</h2>
